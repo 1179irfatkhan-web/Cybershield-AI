@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<div class="container py-5"><h1>Attachment Scan History</h1><ul>{% for scan in scans %}<li><a href="{% url 'attachment_scans:result' scan.id %}">{{ scan.original_filename }}</a> — {{ scan.status }} — {{ scan.risk_level }}</li>{% empty %}<li>No attachment scans yet.</li>{% endfor %}</ul></div>{% endblock %}

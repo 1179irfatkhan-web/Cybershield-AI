@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5" style="max-width:900px">
+<h1>Security Assessment Report</h1><p><strong>Target:</strong> {{ assessment.normalized_url }}</p>
+{% if assessment.status == 'pending' %}<div class="alert alert-info">Your assessment is currently being processed.</div>
+{% elif assessment.status == 'failed' %}<div class="alert alert-danger"><h2>Assessment could not be completed</h2><p>{{ failure.1 }}</p></div>
+{% else %}<div class="row g-3"><div class="col-md-3"><div class="card p-3"><strong>Score</strong><span class="display-6">{% if assessment.overall_score is not None %}{{ assessment.overall_score }}/100{% else %}Not available{% endif %}</span></div></div><div class="col-md-3"><div class="card p-3"><strong>Risk</strong><span>{{ assessment.risk_level|default:'Not assessed'|title }}</span></div></div><div class="col-md-3"><div class="card p-3"><strong>Confidence</strong><span>{{ assessment.confidence_score }}/100</span></div></div><div class="col-md-3"><div class="card p-3"><strong>Completeness</strong><span>{{ assessment.completeness_percentage }}%</span></div></div></div>
+<div class="alert alert-warning mt-4">This report is a low-impact configuration assessment, not a complete penetration test.</div>
+<h2 class="h4 mt-4">Findings</h2><ul>{% for item in assessment.findings %}<li>{{ item.title }} — {{ item.severity }}: {{ item.evidence }}</li>{% empty %}<li>No findings were recorded.</li>{% endfor %}</ul>
+{% if assessment.ai_security_report %}<section class="card mt-4"><div class="card-body"><h2 class="h4">AI Security Explanation</h2><p>{{ assessment.ai_security_report }}</p></div></section>{% endif %}
+{% endif %}<div class="mt-4"><a class="btn btn-primary" href="{% url 'security_assessments:create' %}?submitted_url={{ assessment.submitted_url|urlencode }}">Retry Assessment</a> <a class="btn btn-outline-primary" href="{% url 'security_assessments:history' %}">Assessment History</a> <a class="btn btn-link" href="{% url 'core:dashboard' %}">Back to Dashboard</a></div></div>
+{% endblock %}

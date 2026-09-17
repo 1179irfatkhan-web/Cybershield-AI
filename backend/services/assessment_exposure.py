@@ -1,0 +1,8 @@
+import re
+def analyze_exposure(html,headers=None,page_url=''):
+    text=(html or '')[:524288]; findings=[]; headers={str(k).lower():str(v) for k,v in (headers or {}).items()}
+    if 'server' in headers or 'x-powered-by' in headers: findings.append({'id':'header_disclosure','title':'Server technology disclosure','category':'exposure','severity':'low','confidence':'high','status':'warning','evidence':'Response headers disclose implementation information.','affected_url':page_url,'recommendation':'Minimize unnecessary server version disclosure.','reference':'','deterministic':True})
+    patterns=[('debug_exposure',r'traceback|stack trace|debug mode|fatal error','Debug or stack-trace indicator','medium'),('backup_reference',r'\.(?:bak|old|sql|map)(?:["\'\s]|$)','Potential backup or source-map reference','low'),('directory_listing',r'Index of /','Directory-listing indicator','medium'),('secret_marker',r'-----BEGIN (?:RSA|OPENSSH|PRIVATE) KEY-----','Private-key marker detected','high')]
+    for ident,pat,title,severity in patterns:
+        if re.search(pat,text,re.I): findings.append({'id':ident,'title':title,'category':'exposure','severity':severity,'confidence':'medium','status':'warning','evidence':'A bounded public response matched a conservative indicator.','affected_url':page_url,'recommendation':'Review the public response and remove unintended sensitive exposure.','reference':'','deterministic':True})
+    return {'findings':findings,'positive_findings':[],'unavailable_checks':[],'check_results':{'exposure':'completed'},'message':'Exposure indicators are conservative and values are not retained.'}

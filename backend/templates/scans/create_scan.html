@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Scan Website | CyberShield AI{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        {% if rate_limited %}<div class="alert alert-warning">Scan limit reached. Please wait before submitting another scan.</div>{% endif %}
+        {% if scan_error %}<div class="alert alert-danger">The scan could not be started. Please try again later.</div>{% endif %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-4 p-md-5">
+                        <span class="badge text-bg-primary mb-3">
+                            Website Trust Analysis
+                        </span>
+
+                        <h1 class="fw-bold">Scan a website</h1>
+
+                        <p class="text-secondary">
+                            Enter a complete website URL. CyberShield AI will
+                            later analyze HTTPS, TLS, redirects, security
+                            headers, and suspicious URL patterns.
+                        </p>
+
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.submitted_url.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    {{ form.submitted_url.label }}
+                                </label>
+
+                                {{ form.submitted_url }}
+
+                                {% for error in form.submitted_url.errors %}
+                                    <div class="text-danger small mt-2">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-lg"
+                            >
+                                Start scan
+                            </button>
+
+                            <a
+                                href="{% url 'core:dashboard' %}"
+                                class="btn btn-outline-secondary btn-lg"
+                            >
+                                Cancel
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

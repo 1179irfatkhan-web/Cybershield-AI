@@ -1,0 +1,42 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python environments
+.venv/
+venv/
+env/
+
+# Python bytecode and caches
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Django runtime data
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Coverage and test output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating systems
+.DS_Store
+Thumbs.db
+Desktop.ini
+
